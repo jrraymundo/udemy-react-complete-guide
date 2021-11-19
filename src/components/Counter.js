@@ -1,7 +1,8 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import classes from './Counter.module.css';
 
 const Counter = () => {
+  
   /** 
    * When using function components,
    * the useSelector() hook allows us to get a specific state from the redux store
@@ -9,13 +10,32 @@ const Counter = () => {
    * as well as unsubscribing to the store when the component unmounts
    */
   const counter = useSelector(state => state.counter)
+  
+  /**
+   * This hook allows us to literally dispatch actions to our reducer so it can mutate the store. 
+   * No parameters required for this hook, it just returns a function 
+   * that can be used to dispatch specific actions for a component
+   */
+  const dispatch = useDispatch()
 
-  const toggleCounterHandler = () => {};
+  const incrementHandler = () => {
+    dispatch({ type: 'INCREMENT' })
+  }
+
+  const decrementHandler = () => {
+    dispatch({ type: 'DECREMENT' })
+  }
+
+  const toggleCounterHandler = () => {}
 
   return (
     <main className={classes.counter}>
       <h1>Redux Counter</h1>
       <div className={classes.value}>{counter}</div>
+      <div>
+        <button onClick={incrementHandler}>Increment</button>
+        <button onClick={decrementHandler}>Decrement</button>
+      </div>
       <button onClick={toggleCounterHandler}>Toggle Counter</button>
     </main>
   );
