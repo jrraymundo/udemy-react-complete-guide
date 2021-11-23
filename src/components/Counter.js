@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import classes from './Counter.module.css';
 
 const Counter = () => {
-  
   /** 
    * When using function components,
    * the useSelector() hook allows us to get a specific state from the redux store
@@ -41,4 +40,12 @@ const Counter = () => {
   );
 };
 
-export default Counter;
+export default Counter
+
+/**
+ * connect() from react-redux can also be used
+ * to be able to get state and dispatch in a functional component
+ * but it's just easier to use the hooks
+ * 
+ * See CounterClass.js for the Class based component version
+ */
