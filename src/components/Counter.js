@@ -9,6 +9,7 @@ const Counter = () => {
    * as well as unsubscribing to the store when the component unmounts
    */
   const counter = useSelector(state => state.counter)
+  const show = useSelector(state => state.showCounter)
   
   /**
    * This hook allows us to literally dispatch actions to our reducer so it can mutate the store. 
@@ -29,12 +30,16 @@ const Counter = () => {
     dispatch({ type: 'DECREMENT' })
   }
 
-  const toggleCounterHandler = () => {}
+  const toggleCounterHandler = () => {
+    dispatch({ type: 'TOGGLE' })
+  }
 
   return (
     <main className={classes.counter}>
       <h1>Redux Counter</h1>
-      <div className={classes.value}>{counter}</div>
+      {show && (
+        <div className={classes.value}>{counter}</div>
+      )}
       <div>
         <button onClick={incrementHandler}>Increment</button>
         <button onClick={increaseHandler}>Increase by 5</button>
