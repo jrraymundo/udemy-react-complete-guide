@@ -10,8 +10,8 @@ const Counter = () => {
    * It also automatically handles the subscription of your component to the store,
    * as well as unsubscribing to the store when the component unmounts
    */
-  const counter = useSelector(state => state.counter)
-  const show = useSelector(state => state.showCounter)
+  const counter = useSelector(state => state.counter.counter)
+  const show = useSelector(state => state.counter.showCounter)
   
   /**
    * This hook allows us to literally dispatch actions to our reducer so it can mutate the store. 

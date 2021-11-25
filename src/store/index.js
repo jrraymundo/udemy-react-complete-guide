@@ -1,8 +1,12 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit'
 
-const initialState = { 
+const counterInitialState = { 
     counter: 0,
     showCounter: true
+}
+
+const authInitialState = {
+    isAuthenticated: false
 }
 
 /** 
@@ -26,7 +30,7 @@ const initialState = {
  * */
 const counterSlice = createSlice({
     name: 'counter',
-    initialState,
+    initialState: counterInitialState,
     reducers: {
         increment(state) {
             state.counter++
@@ -43,6 +47,19 @@ const counterSlice = createSlice({
     }
 })
 
+const authSlice = createSlice({
+    name: 'authentication',
+    initialState: authInitialState,
+    reducers: {
+        login(state) {
+            state.isAuthenticated = true
+        },
+        logout(state) {
+            state.isAuthenticated = false
+        },
+    }
+})
+
 /**
  * Redux toolkit has a configureStore function that should take a config object
  * with a reducer property.
@@ -52,7 +69,10 @@ const counterSlice = createSlice({
  * and assign multiple slices via properties
  */
 const store = configureStore({
-    reducer: counterSlice.reducer  
+    reducer: {
+        counter: counterSlice.reducer,
+        auth: authSlice.reducer
+    }
 })
 
 /**
@@ -68,5 +88,6 @@ const store = configureStore({
  * and actions etc. when dispatching actions to the reducer
  */
 export const counterActions = counterSlice.actions
+export const authActions = authSlice.actions
 
 export default store
