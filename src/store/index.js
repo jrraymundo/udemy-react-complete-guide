@@ -1,37 +1,72 @@
-import { createStore } from 'redux'
+import { createSlice, configureStore } from '@reduxjs/toolkit'
 
 const initialState = { 
     counter: 0,
     showCounter: true
 }
 
-const counterReducer = (state = initialState, action) => {
-    switch(action.type) {
-        case 'INCREMENT':
-            return {
-                ...state,
-                counter: state.counter + 1
-            }
-        case 'INCREASE':
-            return {
-                ...state,
-                counter: state.counter + action.amount
-            }
-        case 'DECREMENT':
-            return {
-                ...state,
-                counter: state.counter - 1
-            }
-        case 'TOGGLE':
-            return {
-                ...state,
-                showCounter: !state.showCounter
-            }
-        default:
-            return state
+/** 
+ * The createSlice function from redux toolkit 
+ * is an alternative and simpler way of handling the store and reducers
+ * 
+ * This function accepts an object as its argument
+ * and the object properties should have slice name, initialState, and reducers
+ * 
+ * The states and reducers in a "slice" should conventionally be related to each other.
+ * You would usually have multiple slices that will be combined when the store is created.
+ * 
+ * The reducers property is where you assign reducer methods
+ * Methods created automatically receives 2 arguments which are state and action
+ * 
+ * Without redux toolkit, we are required to return a new state object in our reducers
+ * But here we can actually 'mutate' the state directly, 
+ * but that's because the state from redux toolkit has some abstraction
+ * or background process working. They use a library called immer
+ * which prevents us from actually mutating the actual state
+ * */
+const counterSlice = createSlice({
+    name: 'counter',
+    initialState,
+    reducers: {
+        increment(state) {
+            state.counter++
+        },
+        decrement(state) {
+            state.counter--
+        },
+        increase(state, action) {
+            state.counter = state.counter + action.payload
+        },
+        toggleCounter(state) {
+            state.showCounter = !state.showCounter
+        }
     }
-}
+})
 
-const store = createStore(counterReducer)
+/**
+ * Redux toolkit has a configureStore function that should take a config object
+ * with a reducer property.
+ * 
+ * The reducer property is where you pass your slice. 
+ * When you have multiple slices, you can pass an object
+ * and assign multiple slices via properties
+ */
+const store = configureStore({
+    reducer: counterSlice.reducer  
+})
+
+/**
+ * To dispatch actions from our reducers created in a slice,
+ * we access them via counterSlice.actions
+ * e.g. counterSlice.actions.increment()
+ * 
+ * So from here we can export counterSlice.actions
+ * to be able to dispatch actions in our react components
+ * e.g. dispatch(counterActions.increment())
+ * 
+ * Redux toolkit basically eliminated the process of creating switch statements
+ * and actions etc. when dispatching actions to the reducer
+ */
+export const counterActions = counterSlice.actions
 
 export default store

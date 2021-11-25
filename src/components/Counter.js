@@ -1,6 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux'
 import classes from './Counter.module.css';
 
+import { counterActions } from '../store';
+
 const Counter = () => {
   /** 
    * When using function components,
@@ -18,20 +20,27 @@ const Counter = () => {
    */
   const dispatch = useDispatch()
 
+  /**
+   * When dispatching actions with redux toolkit,
+   * just pass the actions object and call the specific method exported from the store
+   * 
+   * When a value needs to be passed, it will be received as action.payload
+   * in the slice reducer. Its no longer an 'up to you' property name
+   */
   const incrementHandler = () => {
-    dispatch({ type: 'INCREMENT' })
+    dispatch(counterActions.increment())
   }
   
   const increaseHandler = () => {
-    dispatch({ type: 'INCREASE', amount: 5 })
+    dispatch(counterActions.increase(5))
   }
 
   const decrementHandler = () => {
-    dispatch({ type: 'DECREMENT' })
+    dispatch(counterActions.decrement())
   }
 
   const toggleCounterHandler = () => {
-    dispatch({ type: 'TOGGLE' })
+    dispatch(counterActions.toggleCounter())
   }
 
   return (
