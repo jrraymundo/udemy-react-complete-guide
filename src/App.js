@@ -30,6 +30,9 @@ function App() {
     /**
      * We dispatch our sendCartData thunk 
      * to do the async task of sending the cart to our database 
+     * 
+     * This will run whenever the cart state is updated in redux
+     * since we are watching the cart in our dependency array
      */
     dispatch(sendCartData(cart))
   }, [cart, dispatch])
