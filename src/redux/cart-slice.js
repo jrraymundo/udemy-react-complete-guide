@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { uiActions } from './ui-slice'
 
 const cartInitialState = {
     items: [],
     totalQuantity: 0,
+    changed: false
 }
 
 /**
@@ -21,10 +21,19 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: cartInitialState,
     reducers: {
+        replaceCart(state, action) {
+            state.totalQuantity = action.payload.totalQuantity
+            state.items = action.payload.items
+            /**
+             * We don't set changed to true here because this is used in first load of app.js
+             * and we don't want sendCartData to trigger on the first load
+             */
+        },
         addItemToCart(state, action) {
             const newItem = action.payload
             const existingItem = state.items.find(item => item.id === newItem.id)
             state.totalQuantity++
+            state.changed = true
 
             if (!existingItem) {
                 state.items.push({
@@ -43,6 +52,7 @@ const cartSlice = createSlice({
             const id = action.payload
             const existingItem = state.items.find(item => item.id === id)
             state.totalQuantity--
+            state.changed = true
 
             if (existingItem.quantity === 1) {
                 state.items = state.items.filter(item => item.id !== id)
@@ -53,74 +63,6 @@ const cartSlice = createSlice({
         }
     }
 })
-
-/**
- * This function is a THUNK
- * 
- * It's basically a function that delays an action until later.
- * 
- * In more detail, its an action creator function that does NOT return the action itself 
- * but another function which eventually returns the action.
- * 
- * We are able to use dispatch as an argument in the returned callback 
- * because redux toolkit is responsible for making that possible. 
- * We can then write the side effect or async code that will run in the thunk, 
- * and we can even dispatch more actions.
- * 
- * This THUNK can then be imported in react components to be called in useEffect() as a side effect.
- * When redux sees that a function was dispatched in your react components, 
- * then it will treat it as a THUNK automatically.
- */
-export const sendCartData = cart => {
-    return async (dispatch) => {
-        dispatch(
-            uiActions.showNotification({
-                status: 'pending',
-                title: 'Sending...',
-                message: 'Sending cart data!'
-            })
-        )
-            
-        /**
-         * The API call needs to be created in a separate function and be called within sendCartData
-         * because of how the native fetch api works
-         * 
-         * If using axios, this may not be necessary
-         */
-        const sendRequest = async () => {
-            const response = await fetch(
-                'https://udemy-react-redux-2bf6e-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
-                {
-                    method: 'PUT',
-                    body: JSON.stringify(cart)
-                }
-            )
-    
-            if (!response.ok) {
-                throw new Error('Sending cart data failed.')
-            }
-        }
-
-        try {
-            await sendRequest()
-            dispatch(
-                uiActions.showNotification({
-                    status: 'success',
-                    title: 'Success!',
-                    message: 'Sent cart data successfully!'
-                })
-            )
-        } catch (error) {
-            dispatch(
-                uiActions.showNotification({
-                    status: 'error',
-                    title: 'Error!',
-                    message: 'Sending cart data failed!'
-                })
-            )
-        }
-    }
-}
 
 export const cartActions = cartSlice.actions
 

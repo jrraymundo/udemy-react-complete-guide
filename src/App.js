@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { sendCartData } from './redux/cart-slice';
+import { sendCartData, fetchCartData } from './redux/cart-thunks';
 import Notification from './components/UI/Notification'
 import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
@@ -21,6 +21,12 @@ function App() {
   const cart = useSelector((state) => state.cart)
   const notification = useSelector((state) => state.ui.notification)
 
+  // A useEffect for fetching the cart data on first load
+  useEffect(() => {
+    dispatch(fetchCartData())
+  }, [dispatch])
+
+  // A useEffect for sending data to the database when cart changes
   useEffect(() => {
     if (isInitial) {
       isInitial = false
@@ -28,13 +34,20 @@ function App() {
     }
 
     /**
-     * We dispatch our sendCartData thunk 
-     * to do the async task of sending the cart to our database 
-     * 
-     * This will run whenever the cart state is updated in redux
-     * since we are watching the cart in our dependency array
+     * We use a "cart.changed" boolean state
+     * as a solution to prevent sending cart to database on first load
      */
-    dispatch(sendCartData(cart))
+    if (cart.changed) {
+      /**
+       * We dispatch our sendCartData thunk 
+       * to do the async task of sending the cart to our database.
+       * 
+       * This will run whenever the cart state is updated in redux
+       * since we are watching the cart in our dependency array
+       */
+      dispatch(sendCartData(cart))
+    }
+
   }, [cart, dispatch])
 
   return (
