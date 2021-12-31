@@ -12,10 +12,30 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  /**
+   * Debouncing logic using useEffect and the cleanup function
+   * 
+   * When a user finishes typing then the timeout function will eventually run 
+   * and do the validation of the user input.
+   * 
+   * But while the user is still typing then the timer is cleared/reset all the time
+   * which stops the validation from happening unless the user is done typing
+   * 
+   * Note that this is possible because, the returned cleanup function runs
+   * everytime that the useEffect is triggered by its dependencies (except on the first load)
+   */
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    )
+    const timerId = setTimeout(() => {
+      console.log('Checking form validity!')
+      setFormIsValid(
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6
+      )
+    }, 500)
+
+    return () => {
+      console.log('Clean up!!!')
+      clearTimeout(timerId)
+    }
   }, [enteredEmail, enteredPassword])
 
   const emailChangeHandler = (event) => {
