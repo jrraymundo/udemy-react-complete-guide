@@ -62,6 +62,10 @@ const Login = (props) => {
     isValid: null
   })
 
+  // Destructuring with alias assignment
+  const { isValid: emailIsValid } = emailState
+  const { isValid: passwordIsValid } = passwordState
+
   /**
    * Debouncing logic using useEffect and the cleanup function
    * 
@@ -78,7 +82,7 @@ const Login = (props) => {
     const timerId = setTimeout(() => {
       console.log('Checking form validity!')
       setFormIsValid(
-        emailState.isValid && passwordState.isValid
+        emailIsValid && passwordIsValid
       )
     }, 500)
 
@@ -86,14 +90,23 @@ const Login = (props) => {
       console.log('Clean up!!!')
       clearTimeout(timerId)
     }
-  }, [emailState, passwordState])
+  }, [emailIsValid, passwordIsValid])
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: 'USER_INPUT', val: event.target.value });
 
-    setFormIsValid(
-      emailState.isValid && passwordState.isValid
-    );
+    /**
+     * This way of updating state based on other states is actually not recommended
+     * even if you're using a useReducer.
+     * 
+     * It still does not ensure that you're updating with the most updated state.
+     * Doing this in useEffect though is a good idea because the dependency array
+     * ensures that useEffect will always use the updated states 
+     * 
+     * setFormIsValid(
+     *    emailState.isValid && passwordState.isValid
+     * );
+     */
   };
 
   const passwordChangeHandler = (event) => {
