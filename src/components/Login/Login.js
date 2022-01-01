@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -52,16 +52,19 @@ const passwordReducer = (state, action) => {
 
 const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
-
+  
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: '',
     isValid: null
   })
-
+  
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
     value: '',
     isValid: null
   })
+  
+  const emailInputRef = useRef()
+  const passwordInputRef = useRef()
 
   // Destructuring with alias assignment
   const { isValid: emailIsValid } = emailState
@@ -128,13 +131,36 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+
+    /**
+     * When email or password fails validation then we programmatically focus on that input
+     * 
+     * It's possible to do that by using refs, in this case we specifically use forwardRef
+     * which is used when a ref is supposed to be forwarded and used by a child component
+     * 
+     * The focus() method called for email and password is a custom method created for forwardRefs
+     * by using useImperativeHandle() hook in the Input component
+     */
+
+    if (formIsValid) {
+      props.onLogin(emailState.value, passwordState.value);
+    } else if (!emailIsValid) {
+      emailInputRef.current.focus()
+    } else {
+      passwordInputRef.current.focus()
+    }
   };
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
+        {/* 
+          Note that the ref props used here are not actually referencing the Input component 
+          but is actually just being passed or forwarded, as it's supposed to reference 
+          the input element inside the Input component
+        */}
         <Input 
+          ref={emailInputRef}
           id='email' 
           label='E-Mail' 
           type='email' 
@@ -144,6 +170,7 @@ const Login = (props) => {
           onBlur={validateEmailHandler}
         />
         <Input 
+          ref={passwordInputRef}
           id='password' 
           label='Password' 
           type='password' 
@@ -153,7 +180,7 @@ const Login = (props) => {
           onBlur={validatePasswordHandler}
         />
         <div className={classes.actions}>
-          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+          <Button type="submit" className={classes.btn}>
             Login
           </Button>
         </div>
