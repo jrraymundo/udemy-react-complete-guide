@@ -1,9 +1,8 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
-import { useEffect } from 'react/cjs/react.development';
 
 /**
  * The reducers can be declared outside of the React component 
