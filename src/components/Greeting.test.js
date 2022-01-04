@@ -1,14 +1,16 @@
 import { render, screen } from '@testing-library/react'
 import Greeting from "./Greeting"
 
-test ('renders Hello World as text', () => {
-    // Arrange
-    render(<Greeting />)
-
-    // Act
-    // None for this test
-
-    // Assert
-    const helloWorldElement =  screen.getByText('Hello World!')
-    expect(helloWorldElement).toBeInTheDocument()
+describe('Greeting component', () => {
+    test ('renders Hello World as text', () => {
+        // Arrange
+        render(<Greeting />)
+    
+        // Act
+        // None for this test
+    
+        // Assert
+        const helloWorldElement =  screen.getByText('Hello World!')
+        expect(helloWorldElement).toBeInTheDocument()
+    })
 })
