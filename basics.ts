@@ -14,6 +14,7 @@ isDeveloper = true
 
 /**
  * COMPLEX TYPES
+ * array, objects, array of objects
  */
 
 // Array of strings/numbers/booleans
@@ -49,3 +50,12 @@ people = [
         age: 201
     }
 ]
+
+/**
+ * TYPE INFERENCE
+ * This is a feature of TypeScript where it infers the type of a value 
+ * even if you didn’t explicitly declare any types to it.
+ */
+
+let course = 'My simple string'
+course = 12345 // Type 'number' is not assignable to type 'string'
