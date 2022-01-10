@@ -66,3 +66,21 @@ course = 12345 // Type 'number' is not assignable to type 'string'
  */
 let newCourse: string | number = 'My simple string'
 newCourse = 12345
+
+/**
+ * Type Aliases
+ * These are type definitions that can be reused
+ */
+ type Book = {
+    title: string;
+    id: number;
+ }
+
+let myBook1: Book = {
+    title: 'Lord of the Rings',
+    id: 1
+}
+let myBook2: Book = {
+    title: 'The Alchemist',
+    id: 1
+}
