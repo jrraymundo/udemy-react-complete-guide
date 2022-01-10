@@ -99,3 +99,25 @@ function add(a: number, b: number): number {
 function print(value: any): void {
     console.log(value)
 }
+
+/**
+ * GENERICS
+ * This feature allows us to create "type" variables, that allows for more flexible type declarations
+ * It can be use in many scenarios but for this example it's used for a function
+ * 
+ * Think of 'T' as a placeholder variable for the type data
+ * that you would pass as soon as you call the function.
+ * You could pass an array of strings for 1st arg, and a string for 2nd arg
+ * in that case TypeScript would substitute 'T' with string.
+ * 
+ * Note that the 1st arg's type takes precedence.
+ * 
+ * This can be a handful to process and there's more to it so check the docs for more info
+ * https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#generics
+ */
+function insertAtBeginning<T>(array: T[], value: T) {
+    const newArray = [value, ...array]
+    return newArray
+}
+const demoArray = [1, 2, 3]
+const updatedArray = insertAtBeginning(demoArray, -1)
