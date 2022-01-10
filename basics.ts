@@ -56,6 +56,13 @@ people = [
  * This is a feature of TypeScript where it infers the type of a value 
  * even if you didn’t explicitly declare any types to it.
  */
-
 let course = 'My simple string'
 course = 12345 // Type 'number' is not assignable to type 'string'
+
+/**
+ * UNIONS 
+ * TypeScript allows you to set multiple types for a value
+ * allowing for more flexibility
+ */
+let newCourse: string | number = 'My simple string'
+newCourse = 12345
