@@ -84,3 +84,18 @@ let myBook2: Book = {
     title: 'The Alchemist',
     id: 1
 }
+
+/**
+ * FUNCTIONS & FUNCTION TYPES
+ * Types can be declared on the arguments and the value returned of a function
+ */
+
+// This function is declared to return a number
+function add(a: number, b: number): number {
+    return a + b
+}
+
+// If a function returns no value then use void
+function print(value: any): void {
+    console.log(value)
+}
