@@ -1,5 +1,6 @@
 import TodoItem from "./TodoItem"
 import Todo from "../models/todo" // The Todo model is used as a type for props.items
+import classes from './Todos.module.css'
 
 /**
  * React.FC is a Generic type provided by React for function components.
@@ -11,7 +12,7 @@ import Todo from "../models/todo" // The Todo model is used as a type for props.
 
 const Todos: React.FC<{ items?: Todo[] }> = (props) => {
     return (
-        <ul>
+        <ul className={classes.todos}>
             {props.items?.map(item => (
                 <TodoItem key={item.id} text={item.text} />
             ))}
