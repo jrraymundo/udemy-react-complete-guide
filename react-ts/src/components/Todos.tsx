@@ -1,5 +1,7 @@
+import { useContext } from "react"
+
 import TodoItem from "./TodoItem"
-import Todo from "../models/todo" // The Todo model is used as a type for props.items
+import { TodosContext } from "../store/todos-context"
 import classes from './Todos.module.css'
 
 /**
@@ -10,14 +12,15 @@ import classes from './Todos.module.css'
  * We create the type definitions for the props that we pass using React.FC<{}> 
  */
 
-const Todos: React.FC<{ items?: Todo[]; onRemoveTodo: (todoId: string) => void }> = (props) => {
+const Todos: React.FC = () => {
+    const todosContext = useContext(TodosContext)
     return (
         <ul className={classes.todos}>
-            {props.items?.map(item => (
+            {todosContext.items?.map(item => (
                 <TodoItem 
                     key={item.id} 
                     text={item.text} 
-                    onRemoveTodo={props.onRemoveTodo.bind(null, item.id)}
+                    onRemoveTodo={todosContext.removeTodo.bind(null, item.id)}
                 />
             ))}
         </ul>
