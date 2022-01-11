@@ -28,7 +28,13 @@ import { useRef } from "react"
  * However, if we are unsure or know that it can be undefined then we use "?"
  */
 
-const NewTodo = () => {
+/**
+ * FUNCTION PROPS
+ * When passing functions as props, their type definitions comes in the form of writing an arrow function
+ * then specifying what arguments it uses, and what it returns
+ */
+
+const NewTodo: React.FC<{onAddTodo: (text: string) => void}> = (props) => {
     const todoTextInputRef = useRef<HTMLInputElement>(null)
 
     const submitHandler = (event: React.FormEvent) => {
@@ -40,6 +46,8 @@ const NewTodo = () => {
             // throw an error
             return
         }
+
+        props.onAddTodo(enteredText)
     }
 
     return (
