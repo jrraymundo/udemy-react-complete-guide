@@ -10,11 +10,15 @@ import classes from './Todos.module.css'
  * We create the type definitions for the props that we pass using React.FC<{}> 
  */
 
-const Todos: React.FC<{ items?: Todo[] }> = (props) => {
+const Todos: React.FC<{ items?: Todo[]; onRemoveTodo: (todoId: string) => void }> = (props) => {
     return (
         <ul className={classes.todos}>
             {props.items?.map(item => (
-                <TodoItem key={item.id} text={item.text} />
+                <TodoItem 
+                    key={item.id} 
+                    text={item.text} 
+                    onRemoveTodo={props.onRemoveTodo.bind(null, item.id)}
+                />
             ))}
         </ul>
     )
