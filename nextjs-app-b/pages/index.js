@@ -27,15 +27,15 @@ const DUMMY_MEETUPS = [
     It's required that you return an object with a "props" property,
     and that's where you pass the data that you want your component to receive.
 */
-// export async function getStaticProps() {
-//     // Fetch data here from an api
-//     return {
-//         props: {
-//             test: "testing",
-//             meetups: DUMMY_MEETUPS
-//         }
-//     }
-// }
+export async function getStaticProps() {
+    // Fetch data here from an api
+    return {
+        props: {
+            test: "testing",
+            meetups: DUMMY_MEETUPS
+        }
+    }
+}
 
 /*
     Similar to `getStaticProps`. It’s also a reserved function that NextJS runs in the server side. 
@@ -48,17 +48,17 @@ const DUMMY_MEETUPS = [
     If you don’t need any of these features, 
     then `getStaticProps` is a better choice because it’s faster.
 */
-export async function getServerSideProps(context) {
-    const {req, res} = context
+// export async function getServerSideProps(context) {
+//     const {req, res} = context
 
-    // Fetch data here from an api
+//     // Fetch data here from an api
 
-    return {
-        props: {
-            meetups: DUMMY_MEETUPS
-        }
-    }
-}
+//     return {
+//         props: {
+//             meetups: DUMMY_MEETUPS
+//         }
+//     }
+// }
 
 export default function HomePage(props) {
     /*
