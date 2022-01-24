@@ -1,22 +1,12 @@
-import React from 'react'
-import MeetupList from '../components/meetups/MeetupList'
+/*
+    It's ok to import packages for server side code here
+    When a package like MongoClient is imported for use in server-side code like getStaticProps(),
+    NextJS will check if you only used it for server-side, and will not include it
+    in your client-side bundle when you build. So that's good for security and optimization.
+ */
+import { MongoClient } from 'mongodb'
 
-const DUMMY_MEETUPS = [
-    {
-        id: 'm1',
-        title: 'A First Meetup',
-        image: 'https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1167&q=80',
-        address: 'Some address 5, 1234 Some City',
-        description: 'This is a first meetup!'
-    },
-    {
-        id: 'm2',
-        title: 'A Second Meetup',
-        image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTd8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-        address: 'Some address 12, 2057 Some City',
-        description: 'This is a second meetup!'
-    }
-]
+import MeetupList from '../components/meetups/MeetupList'
 
 /*
     This getStaticProps() function is a reserved function/keyword of nextjs
@@ -28,11 +18,33 @@ const DUMMY_MEETUPS = [
     and that's where you pass the data that you want your component to receive.
 */
 export async function getStaticProps() {
-    // Fetch data here from an api
+    /*
+        Since getStaticProps() runs in the server-side
+        you can technically write your data fetching logic here, 
+        because this will not be exposed in the client side
+        and so you can skip the extra step of calling your APIs in "./pages/api"
+
+        But it may still be a better idea to put this logic in a separate file
+        and just import to invoke it here.
+    */
+    const client = await MongoClient.connect(process.env.DB_HOST)
+    const db = client.db()
+
+    const meetupsCollection = db.collection('meetups')
+
+    const meetups = await meetupsCollection.find().toArray()
+    console.log(meetups)
+
+    client.close()
+
     return {
-        props: {
-            test: "testing",
-            meetups: DUMMY_MEETUPS
+        props: { 
+            meetups: meetups.map(meetup => ({
+                id: meetup._id.toString(),
+                title: meetup.title,
+                address: meetup.address,
+                image: meetup.image
+            }))
         }
     }
 }
