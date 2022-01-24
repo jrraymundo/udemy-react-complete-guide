@@ -4,6 +4,7 @@ export default async function handler(req, res) {
     if (req.method == "GET") {
         res.json({ message: "This is a GET request response" })
     }
+    
     if (req.method === "POST") {
         const data = req.body
 
