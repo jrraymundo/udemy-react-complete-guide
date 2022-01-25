@@ -1,3 +1,5 @@
+import { MongoClient, ObjectId } from "mongodb"
+
 import MeetupDetail from "../../components/meetups/MeetupDetail"
 
 /* It's common to keep the pages files lean by moving the components/jsx to a separate file*/
@@ -19,17 +21,21 @@ import MeetupDetail from "../../components/meetups/MeetupDetail"
     access a param not included here, while "true" will just try to display something despite 
     not finding the param
 */
-export function getStaticPaths() {
+export async function getStaticPaths() {
+    const client = await MongoClient.connect(process.env.DB_HOST)
+    const db = client.db()
+
+    const meetupsCollection = db.collection('meetups')
+
+    const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray()
+
+    client.close()
+
     return {
         fallback: false,
-        paths: [
-            {
-                params: { meetupId: 'm1' }
-            },
-            {
-                params: { meetupId: 'm2' }
-            }
-        ]
+        paths: meetups.map(meetup => ({
+            params: { meetupId: meetup._id.toString() }
+        }))
     }
 }
 
@@ -41,14 +47,23 @@ export function getStaticPaths() {
 */
 export async function getStaticProps(context) {
     const { meetupId } = context.params
+    const client = await MongoClient.connect(process.env.DB_HOST)
+    const db = client.db()
+
+    const meetupsCollection = db.collection('meetups')
+
+    const selectedMeetup = await meetupsCollection.findOne({ _id: ObjectId(meetupId) })
+
+    client.close()
+
     return {
         props: {
             meetupData: {
-                id: meetupId,
-                image: 'https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1167&q=80',
-                title: 'First Meetup',
-                address: 'Some Street 5, Some City',
-                description: 'This is a first meeetup'
+                id: selectedMeetup._id.toString(),
+                image: selectedMeetup.image,
+                title: selectedMeetup.title,
+                address: selectedMeetup.address,
+                description: selectedMeetup.description
             }
         }
     }
