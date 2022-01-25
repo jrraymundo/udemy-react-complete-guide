@@ -5,6 +5,7 @@
     in your client-side bundle when you build. So that's good for security and optimization.
  */
 import { MongoClient } from 'mongodb'
+import Head from 'next/head'
 
 import MeetupList from '../components/meetups/MeetupList'
 
@@ -81,6 +82,16 @@ export default function HomePage(props) {
     console.log(props)
 
     return (
-        <MeetupList meetups={props.meetups} />
+        <>
+            {/* This Head JSX from Next allows us to add meta tags and other in head html tag of our page */}
+            <Head>
+                <title>React Meetups</title>
+                <meta 
+                    name='description'
+                    content='Browse a list of meetups'
+                />
+            </Head>
+            <MeetupList meetups={props.meetups} />
+        </>
     )
 }
